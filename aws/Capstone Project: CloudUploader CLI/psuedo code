@@ -8,3 +8,7 @@ https://learn.microsoft.com/en-us/azure/storage/blobs/storage-quickstart-blobs-c
 
 # AWS
 https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-welcome.html
+
+# distinguish between which upload were using is it going to be aws or az? 
+
+#clouduploader /path/to/file.txt
