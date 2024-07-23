@@ -25,6 +25,16 @@ if [[ ! -f $location_file ]]; then
     read -p 'What is the s3 location to place all files? ' aws_location
     echo $aws_location
     echo -e "aws_location=$aws_location" > $location_file
+    read -p 'What is the storage account location to place all files? ' az_location
+    echo $az_location
+    echo -e "az_location=$aws_location" >> $location_file
+    for param in accountname accountkey sharename path; do
+        read -p "For Azure set up... Please input $param " $param
+    done
+    echo -e "az-account-name=$accountname" >> $location_file
+    echo -e "az-account-key=$accountkey" >> $location_file
+    echo -e "az-share-name=$sharename" >> $location_file
+    echo -e "az-path=$path" >> $location_file
 fi
 # Setup & Authentication:
 
@@ -49,6 +59,10 @@ elif [[ $cloud == 'az' ]]; then
 
     azure(){
         az login
+        az storage file upload --account-name $accountname\
+        --account-key $accountkey \
+        --share-name $sharename \
+        --path $path --source $file
     }
 
 else
