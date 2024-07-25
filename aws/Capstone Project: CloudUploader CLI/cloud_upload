@@ -14,12 +14,18 @@ for app in aws az sed; do
     fi
 done
 
+
 # Choose cloud platform
 if [[ -z $cloud ]]; then
     echo 'Please enter which cloud provider you are using. AWS or Azure?'
     exit 1
 fi
 
+# Does $2 exist? 
+if [[ ! -f $file || -z $file ]]; then   
+    echo "file does not exist"
+    exit 1
+fi
 # Choose s3 location
 if [[ ! -f $location_file ]]; then
     read -p 'What is the s3 location to place all files? ' aws_location
@@ -51,7 +57,8 @@ if [[ $cloud == 'aws' ]]; then
 
         fileuploadname=$(basename $file)
         aws_location=$(sed -n 's/^aws_location=\(.*\)/\1/p' $location_file)
-        aws s3 cp "$file" "$aws_location/$fileuploadname"
+
+        aws s3 cp "$file" "$aws_location/$fileuploadname" && echo "Upload Successful!" || echo "Upload Failure..."
     }
     aws
 # Azure
@@ -62,15 +69,9 @@ elif [[ $cloud == 'az' ]]; then
         az storage file upload --account-name $accountname\
         --account-key $accountkey \
         --share-name $sharename \
-        --path $path --source $file
+        --path $path --source $file && echo "Upload Successful!" || echo "Upload Failure..."
     }
 
 else
     echo 'please run again using aws or az'
 fi
-
-# CLI Argument Parsing
-
-# File Check
-
-# File Upload
